@@ -1,2 +1,73 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+
+import Foundation
+
+public final class ExtendedUserDefaults {
+    
+    let userDefaults: UserDefaults
+
+    public static let standard: ExtendedUserDefaults = .init(userDefaults: .standard)
+    
+    init(userDefaults: UserDefaults) {
+        self.userDefaults = userDefaults
+    }
+    
+    /// Creates a user defaults object initialized with the defaults for the app and current user.
+    public init() {
+        self.userDefaults = .init()
+    }
+    
+    /// Creates a user defaults object initialized with the defaults for the specified database name.
+    /// - Parameter suiteName: The domain identifier of the search list.
+    public init?(suiteName: String?) {
+        guard let userDefaults: UserDefaults = .init(suiteName: suiteName) else {
+            return nil
+        }
+        self.userDefaults = userDefaults
+    }
+
+    public func setValue(_ value: Any?, forKey key: UserDefaultsKeyProtocol) {
+        userDefaults.setValue(value, forKey: key.identifier)
+    }
+
+    @discardableResult
+    public func setCodable(_ value: Codable, forKey key: UserDefaultsKeyProtocol) -> Result<Void, Error> {
+        do {
+            let encoded = try JSONEncoder().encode(value)
+            setValue(encoded, forKey: key)
+
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    public func object(forKey key: UserDefaultsKeyProtocol) -> Any? {
+        return userDefaults.object(forKey: key.identifier)
+    }
+
+    public func object<T: Decodable>(_ type: T.Type, forKey key: UserDefaultsKeyProtocol) -> Result<T, Error> {
+        let object = self.object(forKey: key)
+
+        guard let data = object as? Data else {
+            return .failure(ExtendedUserDefaultsError.keyNotFound)
+        }
+
+        do {
+            let decoded = try JSONDecoder().decode(T.self, from: data)
+            return .success(decoded)
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    public func removeObject(forKey key: UserDefaultsKeyProtocol) {
+        userDefaults.removeObject(forKey: key.identifier)
+    }
+
+    public func removeAllObject<Key>(forKeyType keyType: Key.Type) where Key: CaseIterable & UserDefaultsKeyProtocol {
+        keyType.allCases.forEach { key in
+            userDefaults.removeObject(forKey: key.identifier)
+        }
+    }
+    
+}
