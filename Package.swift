@@ -17,7 +17,7 @@ let package = Package(
                 "ExtendedUserDefaults",
                 "ExtendedUserDefaultsRxExtension"
             ]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.6.0")
@@ -28,7 +28,7 @@ let package = Package(
             name: "ExtendedUserDefaultsRxExtension",
             dependencies: [
                 .target(name: "ExtendedUserDefaults"),
-                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxSwift", package: "RxSwift")
             ]
         ),
         .testTarget(
@@ -38,6 +38,6 @@ let package = Package(
                 "ExtendedUserDefaultsRxExtension",
                 .product(name: "RxBlocking", package: "RxSwift")
             ]
-        ),
+        )
     ]
 )

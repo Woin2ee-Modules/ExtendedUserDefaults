@@ -25,20 +25,20 @@ SOFTWARE.
 import Foundation
 
 public final class ExtendedUserDefaults {
-    
+
     let userDefaults: UserDefaults
 
     public static let standard: ExtendedUserDefaults = .init(userDefaults: .standard)
-    
+
     init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
     }
-    
+
     /// Creates a user defaults object initialized with the defaults for the app and current user.
     public init() {
         self.userDefaults = .init()
     }
-    
+
     /// Creates a user defaults object initialized with the defaults for the specified database name.
     /// - Parameter suiteName: The domain identifier of the search list.
     public init?(suiteName: String?) {
@@ -83,6 +83,13 @@ public final class ExtendedUserDefaults {
         }
     }
 
+    public func bool(forKey key: UserDefaultsKeyProtocol) -> Bool? {
+        guard let object = userDefaults.object(forKey: key.identifier) else {
+            return nil
+        }
+        return object as? Bool
+    }
+
     public func removeObject(forKey key: UserDefaultsKeyProtocol) {
         userDefaults.removeObject(forKey: key.identifier)
     }
@@ -92,5 +99,5 @@ public final class ExtendedUserDefaults {
             userDefaults.removeObject(forKey: key.identifier)
         }
     }
-    
+
 }

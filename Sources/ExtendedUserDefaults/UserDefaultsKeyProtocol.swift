@@ -8,8 +8,8 @@
 import Foundation
 
 public protocol UserDefaultsKeyProtocol {
-    
+
     /// The Identifier to distinguish each key. Must not be duplicates.
     var identifier: String { get }
-    
+
 }

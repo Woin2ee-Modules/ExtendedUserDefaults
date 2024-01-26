@@ -9,14 +9,14 @@ import Foundation
 import ExtendedUserDefaults
 
 enum TestKey: UserDefaultsKeyProtocol, CaseIterable {
-    
+
     case test
-    
+
     var identifier: String {
         switch self {
         case .test:
             return String(describing: self)
         }
     }
-    
+
 }

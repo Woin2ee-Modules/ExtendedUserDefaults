@@ -75,4 +75,14 @@ extension Reactive where Base: ExtendedUserDefaults {
         }
     }
 
+    public func bool(forKey key: UserDefaultsKeyProtocol) -> Single<Bool> {
+        let object = base.bool(forKey: key)
+
+        guard let object = object else {
+            return .error(ExtendedUserDefaultsError.keyNotFound)
+        }
+
+        return .just(object)
+    }
+
 }
